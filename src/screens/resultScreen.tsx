@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 const ResultScreen = ({ navigation, route }: any) => {
-  console.log(route.params.result);
   const { acertos, erros } = route.params.result;
 
   return (

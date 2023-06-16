@@ -18,11 +18,6 @@ const QuizScreen = ({ navigation }: any) => {
   });
 
   const handleClickResult = (alternativa: string, index: number) => {
-    console.log({
-      alternativa,
-      correto: perguntas[index].respostaCorreta,
-      index,
-    });
     if (alternativa === perguntas[index].respostaCorreta) {
       setResult((state) => {
         return {
@@ -43,10 +38,6 @@ const QuizScreen = ({ navigation }: any) => {
     console.error("errou");
     setCurrentQuestion((state) => state + 1);
   };
-
-  React.useEffect(() => {
-    console.log({ result });
-  }, [result]);
 
   return (
     <SafeAreaView style={s.container}>
