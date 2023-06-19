@@ -7,9 +7,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Dimensions,
 } from "react-native";
+const { width, height } = Dimensions.get("screen");
 import { perguntas } from "../constants/perguntas";
-
+import { Ionicons } from "@expo/vector-icons";
+import Animated, { FadeIn, RollInRight } from "react-native-reanimated";
 const QuizScreen = ({ navigation }: any) => {
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [result, setResult] = React.useState({
@@ -26,7 +29,6 @@ const QuizScreen = ({ navigation }: any) => {
         };
       });
       setCurrentQuestion((state) => state + 1);
-      console.log("acertou");
       return;
     }
     setResult((state) => {
@@ -35,7 +37,6 @@ const QuizScreen = ({ navigation }: any) => {
         erros: state.erros + 1,
       };
     });
-    console.error("errou");
     setCurrentQuestion((state) => state + 1);
   };
 
@@ -46,7 +47,45 @@ const QuizScreen = ({ navigation }: any) => {
         alt="background"
         source={require("../../assets/espaco1.jpg")}
       />
+      <Ionicons name="checkmark-done" style={{ width: 20 }} color={"green"} />
       <View style={s.content}>
+        <View style={s.navigation}>
+          <View style={s.navContent}>
+            {currentQuestion > 0 && (
+              <Ionicons
+                style={{ position: "absolute", left: 0 }}
+                onPress={() =>
+                  setCurrentQuestion((state) => {
+                    if (state === 0) {
+                      return state;
+                    }
+                    return state - 1;
+                  })
+                }
+                name="arrow-back"
+                size={24}
+                color="white"
+              />
+            )}
+            {currentQuestion <= perguntas.length - 1 && (
+              <Ionicons
+                style={{ position: "absolute", right: 0 }}
+                onPress={() =>
+                  setCurrentQuestion((state) => {
+                    if (state === perguntas.length - 1) {
+                      return state;
+                    }
+                    return state + 1;
+                  })
+                }
+                name="arrow-forward"
+                size={24}
+                color="white"
+              />
+            )}
+          </View>
+        </View>
+
         {perguntas.map((pergunta, indexPergunta) => {
           if (indexPergunta !== currentQuestion) return null;
           return (
@@ -54,26 +93,32 @@ const QuizScreen = ({ navigation }: any) => {
               <Text style={s.txtB}>{pergunta.pergunta}</Text>
               {pergunta.alternativas.map((alternativa, indexAlternativa) => {
                 return (
-                  <TouchableOpacity
-                    style={s.alternativa}
+                  <View
+                    style={s.alternativaContent}
                     key={indexAlternativa}
-                    onPress={() =>
-                      handleClickResult(alternativa.id, indexPergunta)
-                    }
                   >
-                    <Text style={s.txtB}>{alternativa.id}</Text>
-                    <Text style={s.txtL}>{alternativa.txt}</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={s.alternativa}
+                      onPress={() =>
+                        handleClickResult(alternativa.id, indexPergunta)
+                      }
+                    >
+                      <Text style={s.txtB}>{alternativa.id}</Text>
+                      <Text style={s.txtL}>{alternativa.txt}</Text>
+                    </TouchableOpacity>
+                  </View>
                 );
               })}
             </View>
           );
         })}
         {currentQuestion === 7 && (
-          <Button
-            title="Finalizar Teste"
+          <TouchableOpacity
+            style={s.botao}
             onPress={() => navigation.navigate("result", { result })}
-          />
+          >
+            <Text style={s.txtB}>Finalizar Quiz</Text>
+          </TouchableOpacity>
         )}
       </View>
     </SafeAreaView>
@@ -89,11 +134,23 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    width: "80%",
+    maxWidth: width * 0.8,
+    minWidth: width * 0.8,
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
+  },
+  navigation: {
+    position: "absolute",
+    top: "50%",
+    width: width - 15,
+    marginBottom: 30,
+  },
+  navContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    position: "relative",
   },
   bg: {
     width: "100%",
@@ -104,15 +161,29 @@ const s = StyleSheet.create({
   altContainer: {
     gap: 10,
   },
+  botao: {
+    width: width * 0.8,
+    backgroundColor: "#121212",
+    color: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
   pergunta: {
     color: "#fff",
     textAlign: "left",
     fontSize: 20,
     fontWeight: "bold",
   },
+  alternativaContent: {
+    borderRadius: 5,
+    padding: 10,
+    flexDirection: "row",
+    gap: 10,
+    backgroundColor: "#121212",
+  },
   alternativa: {
-    borderWidth: 1,
-    borderColor: "black",
     borderRadius: 5,
     padding: 10,
     flexDirection: "row",

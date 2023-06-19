@@ -14,7 +14,8 @@ export default function App() {
         <Stack.Screen
           options={{
             headerShown: false,
-            animation: "slide_from_left",
+            animation: "slide_from_right",
+            statusBarColor: "#000",
           }}
           name="home"
           component={HomeScreen}
@@ -22,7 +23,8 @@ export default function App() {
         <Stack.Screen
           options={{
             headerShown: false,
-            animation: "slide_from_left",
+            animation: "slide_from_right",
+            statusBarColor: "#000",
           }}
           name="quiz"
           component={QuizScreen}
@@ -30,7 +32,8 @@ export default function App() {
         <Stack.Screen
           options={{
             headerShown: false,
-            animation: "slide_from_left",
+            animation: "slide_from_bottom",
+            statusBarColor: "#000",
           }}
           name="result"
           component={ResultScreen}
